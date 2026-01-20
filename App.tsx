@@ -10,6 +10,7 @@ import { FeatureGrid } from './components/FeatureGrid';
 import { ComparisonTable } from './components/ComparisonTable';
 import { SuccessShowcase } from './components/SuccessShowcase';
 import { LiveDemo } from './components/LiveDemo';
+import { Integrations } from './components/Integrations';
 import { Pricing } from './components/Pricing';
 import { FAQ } from './components/FAQ';
 import { Guarantees } from './components/Guarantees';
@@ -51,6 +52,7 @@ const App: React.FC = () => {
         <ComparisonTable />
         <div id="reviews"><SuccessShowcase /></div>
         <div id="demo"><LiveDemo /></div>
+        <Integrations />
         <div id="pricing"><Pricing /></div>
         <div id="faq"><FAQ /></div>
         <Guarantees />
