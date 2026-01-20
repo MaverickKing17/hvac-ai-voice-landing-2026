@@ -56,14 +56,24 @@ export const BookingChatbot: React.FC = () => {
 
     const lastAiMessage = [...messages].reverse().find(m => m.role === 'ai');
     
+    // Initial Flow Branching
     if (lastAiMessage?.content.includes("looking for today")) {
-      simulateResponse(
-        `Got it. A ${option.toLowerCase()}. Our technicians are currently in your area. Can you confirm your city?`,
-        1200,
-        'options',
-        ['Mississauga', 'Brampton', 'Oakville', 'Toronto']
-      );
-    } else if (lastAiMessage?.content.includes("confirm your city")) {
+      if (option.includes('Quote') || option === 'Other') {
+        simulateResponse(
+          "Great! I can help with a custom quote. To get started, what is the full service address?",
+          1000
+        );
+      } else {
+        simulateResponse(
+          `Got it. A ${option.toLowerCase()}. Our technicians are currently in your area. Can you confirm your city?`,
+          1200,
+          'options',
+          ['Mississauga', 'Brampton', 'Oakville', 'Toronto']
+        );
+      }
+    } 
+    // Repair/Maintenance City Confirmation
+    else if (lastAiMessage?.content.includes("confirm your city")) {
       simulateResponse(
         `Perfect. Checking the schedule for ${option}...`,
         1000
@@ -76,7 +86,49 @@ export const BookingChatbot: React.FC = () => {
           ['9:00 AM - 11:00 AM', '1:00 PM - 3:00 PM', '4:00 PM - 6:00 PM']
         );
       }, 1500);
-    } else if (lastAiMessage?.type === 'slots') {
+    } 
+    // Quote Flow: Equipment Selection
+    else if (lastAiMessage?.content.includes("desired equipment")) {
+      simulateResponse(
+        "Understood. Do you have a budget range in mind for this project?",
+        1000,
+        'options',
+        ['$5,000 - $8,000', '$8,000 - $12,000', '$12,000+', 'Not sure yet']
+      );
+    }
+    // Quote Flow: Budget Selection
+    else if (lastAiMessage?.content.includes("budget range")) {
+      simulateResponse(
+        "Thanks for that. I have enough to start your quote! Would you like to schedule a quick 15-minute consultation with a specialist to finalize the numbers?",
+        1200,
+        'options',
+        ['Yes, schedule now', 'No, just email me']
+      );
+    }
+    // Quote Flow: Consultation Choice
+    else if (lastAiMessage?.content.includes("finalize the numbers")) {
+      if (option === 'Yes, schedule now') {
+        simulateResponse(
+          "Excellent. Checking specialist availability...",
+          1000
+        );
+        setTimeout(() => {
+          simulateResponse(
+            "I found 3 available slots for tomorrow. Which one works best for you?",
+            1000,
+            'slots',
+            ['9:00 AM - 11:00 AM', '1:00 PM - 3:00 PM', '4:00 PM - 6:00 PM']
+          );
+        }, 1500);
+      } else {
+        simulateResponse(
+          "No problem! Please provide your name and email address, and a quote specialist will reach out by tomorrow morning.",
+          1200
+        );
+      }
+    }
+    // Booking Slots
+    else if (lastAiMessage?.type === 'slots') {
       simulateResponse(
         `Excellent. I've reserved the ${option} slot. To finalize, please tell me your name and phone number.`,
         1200
@@ -93,11 +145,25 @@ export const BookingChatbot: React.FC = () => {
     addMessage({ id: Date.now().toString(), role: 'user', content: val });
     input.value = '';
 
-    simulateResponse(
-      "Thank you! Your booking is confirmed. You'll receive a confirmation text shortly. Our technician will call you 20 minutes before arrival.",
-      2000,
-      'success'
-    );
+    const lastAiMessage = [...messages].reverse().find(m => m.role === 'ai');
+
+    // Handle Quote Flow Address Input
+    if (lastAiMessage?.content.includes("full service address")) {
+      simulateResponse(
+        "Thank you. What is your desired equipment or primary interest?",
+        1000,
+        'options',
+        ['Heat Pump', 'Furnace', 'Central AC', 'Hybrid System']
+      );
+    } 
+    // Handle Final Info (Success)
+    else {
+      simulateResponse(
+        "Thank you! Your request is confirmed. You'll receive a confirmation text/email shortly. If you booked a repair, our technician will call 20 minutes before arrival.",
+        2000,
+        'success'
+      );
+    }
   };
 
   return (
