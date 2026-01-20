@@ -16,6 +16,7 @@ import { Guarantees } from './components/Guarantees';
 import { Footer } from './components/Footer';
 import { FinalCTA } from './components/FinalCTA';
 import { UrgencyBanner } from './components/UrgencyBanner';
+import { SymptomChecker } from './components/SymptomChecker';
 
 const App: React.FC = () => {
   const [isDark, setIsDark] = useState(false);
@@ -43,6 +44,7 @@ const App: React.FC = () => {
         <TrustBar />
         <ProblemSolution />
         <HowItWorks />
+        <SymptomChecker />
         <ROICalculator />
         <FeatureGrid />
         <ComparisonTable />
