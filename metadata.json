@@ -1,5 +1,7 @@
 {
   "name": "Peel AI Receptionist - 2026 Redesign",
-  "description": "A high-converting, 2026-standard web application for Peel Heating & Cooling, featuring glassmorphism, mesh gradients, interactive ROI calculators, and a simulated AI voice demo.",
-  "requestFramePermissions": []
+  "description": "A high-converting, 2026-standard web application for Peel Heating & Cooling, featuring glassmorphism, mesh gradients, interactive ROI calculators, and a real-time AI voice receptionist demo.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
 }
