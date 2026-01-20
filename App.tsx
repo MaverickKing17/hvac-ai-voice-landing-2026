@@ -8,7 +8,7 @@ import { HowItWorks } from './components/HowItWorks';
 import { ROICalculator } from './components/ROICalculator';
 import { FeatureGrid } from './components/FeatureGrid';
 import { ComparisonTable } from './components/ComparisonTable';
-import { Testimonials } from './components/Testimonials';
+import { SuccessShowcase } from './components/SuccessShowcase';
 import { LiveDemo } from './components/LiveDemo';
 import { Pricing } from './components/Pricing';
 import { FAQ } from './components/FAQ';
@@ -49,7 +49,7 @@ const App: React.FC = () => {
         <div id="roi"><ROICalculator /></div>
         <div id="features"><FeatureGrid /></div>
         <ComparisonTable />
-        <div id="reviews"><Testimonials /></div>
+        <div id="reviews"><SuccessShowcase /></div>
         <div id="demo"><LiveDemo /></div>
         <div id="pricing"><Pricing /></div>
         <div id="faq"><FAQ /></div>
