@@ -3,6 +3,11 @@ import React from 'react';
 import { Waveform } from './Waveform';
 
 export const Hero: React.FC = () => {
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className="relative min-h-[90vh] flex items-center pt-20 pb-32 overflow-hidden mesh-gradient">
       {/* Decorative Floating Elements */}
@@ -38,11 +43,17 @@ export const Hero: React.FC = () => {
           </ul>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <button className="bg-[#FF6B35] hover:bg-[#E55A2B] text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all transform hover:scale-105 text-lg shadow-lg">
+            <button 
+              onClick={() => scrollTo('demo')}
+              className="bg-[#FF6B35] hover:bg-[#E55A2B] text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all transform hover:scale-105 text-lg shadow-lg"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
               HEAR IT IN ACTION
             </button>
-            <button className="border-2 border-white/50 text-white hover:bg-white/10 px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all text-lg backdrop-blur-sm">
+            <button 
+              onClick={() => scrollTo('how-it-works')}
+              className="border-2 border-white/50 text-white hover:bg-white/10 px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all text-lg backdrop-blur-sm"
+            >
               SEE HOW IT WORKS
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </button>
@@ -71,7 +82,10 @@ export const Hero: React.FC = () => {
             </div>
             
             <div className="space-y-6">
-              <div className="flex items-center justify-center p-8 bg-[#003A87]/10 rounded-full w-24 h-24 mx-auto cursor-pointer group hover:bg-[#FF6B35]/20 transition-all">
+              <div 
+                onClick={() => scrollTo('demo')}
+                className="flex items-center justify-center p-8 bg-[#003A87]/10 rounded-full w-24 h-24 mx-auto cursor-pointer group hover:bg-[#FF6B35]/20 transition-all"
+              >
                  <svg className="w-10 h-10 text-[#FF6B35] group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               </div>
               

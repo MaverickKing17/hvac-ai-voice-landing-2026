@@ -2,6 +2,11 @@
 import React from 'react';
 
 export const FinalCTA: React.FC = () => {
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className="py-24 mesh-gradient text-white">
       <div className="container mx-auto px-4 max-w-5xl text-center">
@@ -28,12 +33,18 @@ export const FinalCTA: React.FC = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-           <button className="bg-[#FF6B35] hover:bg-[#E55A2B] text-white px-12 py-5 rounded-2xl font-black text-2xl shadow-2xl hover:scale-105 transition-all w-full sm:w-auto">
+           <button 
+            onClick={() => scrollTo('pricing')}
+            className="bg-[#FF6B35] hover:bg-[#E55A2B] text-white px-12 py-5 rounded-2xl font-black text-2xl shadow-2xl hover:scale-105 transition-all w-full sm:w-auto"
+           >
              START FREE TRIAL
            </button>
-           <a href="#" className="text-white text-lg font-bold underline underline-offset-8 decoration-[#FF6B35] hover:text-[#FF6B35] transition-colors">
+           <button 
+            onClick={() => scrollTo('demo')}
+            className="text-white text-lg font-bold underline underline-offset-8 decoration-[#FF6B35] hover:text-[#FF6B35] transition-colors"
+           >
              Schedule a personal demo
-           </a>
+           </button>
         </div>
       </div>
     </section>

@@ -41,18 +41,18 @@ const App: React.FC = () => {
       <UrgencyBanner />
       <Header />
       <main>
-        <Hero />
+        <div id="home"><Hero /></div>
         <TrustBar />
         <ProblemSolution />
-        <HowItWorks />
-        <SymptomChecker />
-        <ROICalculator />
-        <FeatureGrid />
+        <div id="how-it-works"><HowItWorks /></div>
+        <div id="diagnose"><SymptomChecker /></div>
+        <div id="roi"><ROICalculator /></div>
+        <div id="features"><FeatureGrid /></div>
         <ComparisonTable />
-        <Testimonials />
-        <LiveDemo />
-        <Pricing />
-        <FAQ />
+        <div id="reviews"><Testimonials /></div>
+        <div id="demo"><LiveDemo /></div>
+        <div id="pricing"><Pricing /></div>
+        <div id="faq"><FAQ /></div>
         <Guarantees />
         <FinalCTA />
       </main>
@@ -71,7 +71,7 @@ const App: React.FC = () => {
           CALL NOW
         </a>
         <button 
-          onClick={() => document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
           className="flex-1 bg-[#FF6B35] text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
