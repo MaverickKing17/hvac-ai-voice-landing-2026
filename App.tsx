@@ -17,6 +17,7 @@ import { Footer } from './components/Footer';
 import { FinalCTA } from './components/FinalCTA';
 import { UrgencyBanner } from './components/UrgencyBanner';
 import { SymptomChecker } from './components/SymptomChecker';
+import { BookingChatbot } from './components/BookingChatbot';
 
 const App: React.FC = () => {
   const [isDark, setIsDark] = useState(false);
@@ -56,6 +57,9 @@ const App: React.FC = () => {
         <FinalCTA />
       </main>
       <Footer />
+      
+      {/* AI Booking Chatbot Widget */}
+      <BookingChatbot />
       
       {/* Mobile Bottom Action Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-card p-4 flex gap-4">
