@@ -42,12 +42,31 @@ async function decodeAudioData(
   return buffer;
 }
 
-const SYSTEM_INSTRUCTION = `You are Alex, the friendly and highly professional AI Voice Receptionist for 'Peel Heating & Cooling'. 
-You serve the Toronto and GTA area. 
-Your goal is to answer calls, empathize with customers (especially in emergencies like no heat), 
-gather their name and location (Mississauga, Brampton, etc.), and help them book service. 
-Keep responses concise, helpful, and speak with a natural Canadian tone. 
-If it's an emergency, reassure them that a tech will be dispatched immediately.`;
+const getSystemInstruction = () => {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const timeStr = now.toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' });
+
+  return `You are a dual-persona AI voice system for 'Green Choice Heating & Cooling' (Peel Heating). 
+Today is ${dateStr}. The current time in Toronto/GTA is ${timeStr}. 
+
+## PERSONA 1: Chloe (Front-Desk / Rebates)
+- Tone: Friendly, patient, and ethical.
+- Expertise: 2026 Home Renovation Savings (HRS) program.
+- Logic: If a caller mentions "rebates" or "heat pumps," explain they can get up to $7,500 (Electric heat) or $2,000 (Gas). 
+- Task: Follow the REBATE QUALIFIER CHECKLIST: Ask about primary heating source (Electric/Gas/Oil), property type (Detached/Semi/Row), and if they are an Enbridge or Ontario power grid customer.
+
+## PERSONA 2: Sam (Emergency Dispatch)
+- Tone: Calm, fast, and authoritative. 
+- Trigger: Mention of "gas smell," "no heat," "water leak," or "banging noises."
+- Hand-off: Chloe must say: "That sounds urgent. Let me get Sam, our emergency specialist, on the line for you."
+- Task: Ask for home address and confirm 4-hour response.
+
+## MANDATORY SAFETY RULE
+If "gas smell" is mentioned, you MUST say: "For your safety, please hang up, leave the house immediately, and call 911. Once you are safe, call us back and we will dispatch a tech."
+
+Keep responses concise. Speak with a natural Canadian accent.`;
+};
 
 export const LiveDemo: React.FC = () => {
   const [isLive, setIsLive] = useState(false);
@@ -114,8 +133,8 @@ export const LiveDemo: React.FC = () => {
               const text = message.serverContent.outputTranscription.text;
               setTranscript(prev => {
                 const last = prev[prev.length - 1];
-                if (last?.speaker === 'Alex') return [...prev.slice(0, -1), { ...last, text: last.text + text }];
-                return [...prev, { speaker: 'Alex', text }];
+                if (last?.speaker === 'AI Agent') return [...prev.slice(0, -1), { ...last, text: last.text + text }];
+                return [...prev, { speaker: 'AI Agent', text }];
               });
             } else if (message.serverContent?.inputTranscription) {
               const text = message.serverContent.inputTranscription.text;
@@ -155,7 +174,7 @@ export const LiveDemo: React.FC = () => {
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } },
-          systemInstruction: SYSTEM_INSTRUCTION,
+          systemInstruction: getSystemInstruction(),
           outputAudioTranscription: {},
           inputAudioTranscription: {},
         }
@@ -174,8 +193,8 @@ export const LiveDemo: React.FC = () => {
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-16">
           <div className="text-center md:text-left">
-            <h2 className="text-4xl md:text-5xl font-black text-[#003A87] dark:text-[#FF6B35] mb-4">Live Agent Demo</h2>
-            <p className="text-xl text-gray-500 font-medium">Test our real-time voice receptionist in the GTA.</p>
+            <h2 className="text-4xl md:text-5xl font-black text-[#003A87] dark:text-[#FF6B35] mb-4">Dual-Persona Demo</h2>
+            <p className="text-xl text-gray-500 font-medium">Test Chloe (Rebates) and Sam (Emergencies) in real-time.</p>
           </div>
           <div className="flex flex-col items-center md:items-end gap-2">
             <div className="flex items-center gap-2 bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
@@ -187,7 +206,6 @@ export const LiveDemo: React.FC = () => {
         </div>
 
         <div className="glass-card rounded-[40px] p-8 md:p-12 shadow-2xl overflow-hidden min-h-[550px] flex flex-col relative border-white/50">
-          {/* Dashboard Header */}
           <div className="flex flex-wrap items-center justify-between gap-6 mb-12 pb-8 border-b border-gray-100 dark:border-white/5">
             <div className="flex items-center gap-6">
               <button 
@@ -221,14 +239,13 @@ export const LiveDemo: React.FC = () => {
           {showTechnical && (
             <div className="mb-8 p-6 bg-black text-green-400 font-mono text-xs rounded-2xl animate-in slide-in-from-top-4 duration-300">
               <p className="mb-1">{`> LIVEKIT_AGENT_ID: "CA_FbNDoLYraenP"`}</p>
-              <p className="mb-1">{`> PROVIDER: "Gemini 2.5 Live (Audio-Native)"`}</p>
-              <p className="mb-1">{`> STATUS: "ACTIVE"`}</p>
-              <p>{`> ENCRYPTION: "AES-256-GCM"`}</p>
+              <p className="mb-1">{`> SYSTEM_DATE: "${new Date().toLocaleDateString()}"`}</p>
+              <p className="mb-1">{`> PERSONA_MODES: ["CHLOE", "SAM"]`}</p>
+              <p>{`> SAFETY_TRIGGER: "GAS_SMELL"`}</p>
             </div>
           )}
 
           <div className="grid lg:grid-cols-12 gap-12 flex-1">
-            {/* Visualizer and Status */}
             <div className="lg:col-span-4 flex flex-col justify-center items-center gap-8">
               <div className="relative">
                 <div className={`absolute inset-0 bg-[#FF6B35]/20 rounded-full blur-[40px] transition-opacity duration-1000 ${isLive ? 'opacity-100' : 'opacity-0'}`}></div>
@@ -239,32 +256,31 @@ export const LiveDemo: React.FC = () => {
                 </div>
               </div>
               <div className="text-center">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Simulated GTA Carrier</p>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Simulated Carrier: Bell Canada</p>
                 <div className="flex items-center gap-1.5 justify-center">
                   {[...Array(5)].map((_, i) => (
                     <div key={i} className={`w-1.5 h-3 rounded-full ${i < 4 ? 'bg-[#FF6B35]' : 'bg-gray-200'}`}></div>
                   ))}
-                  <span className="text-xs font-black ml-2">LTE+</span>
+                  <span className="text-xs font-black ml-2">5G+</span>
                 </div>
               </div>
             </div>
 
-            {/* Live Transcript */}
             <div className="lg:col-span-8 flex flex-col">
               <div className="flex-1 bg-gray-50/50 dark:bg-white/5 rounded-3xl p-6 overflow-y-auto max-h-[350px] border border-gray-100 dark:border-white/10 space-y-4 no-scrollbar">
                 {transcript.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center text-gray-400 p-8 space-y-4">
-                    <div className="w-16 h-16 bg-white dark:bg-white/5 rounded-2xl flex items-center justify-center text-3xl shadow-sm">🎙️</div>
+                    <div className="w-16 h-16 bg-white dark:bg-white/5 rounded-2xl flex items-center justify-center text-3xl shadow-sm">🏢</div>
                     <div>
-                      <p className="text-lg font-bold italic mb-1">"Hi Alex, I need someone to look at my AC in Brampton..."</p>
-                      <p className="text-xs font-medium uppercase tracking-widest opacity-60">Wait for the connection before speaking</p>
+                      <p className="text-lg font-bold italic mb-1">"Hi Chloe, I want to know about the $7,500 rebate..."</p>
+                      <p className="text-xs font-medium uppercase tracking-widest opacity-60">Speak now to test persona switching</p>
                     </div>
                   </div>
                 ) : (
                   transcript.map((line, i) => (
-                    <div key={i} className={`flex flex-col ${line.speaker === 'Alex' ? 'items-start' : 'items-end'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                    <div key={i} className={`flex flex-col ${line.speaker === 'AI Agent' ? 'items-start' : 'items-end'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
                       <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 px-2">{line.speaker}</span>
-                      <div className={`max-w-[85%] p-4 rounded-2xl font-medium text-sm shadow-sm ${line.speaker === 'Alex' ? 'bg-[#003A87] text-white rounded-tl-none' : 'bg-white dark:bg-[#FF6B35] dark:text-white text-[#003A87] border border-gray-100 dark:border-transparent rounded-tr-none'}`}>
+                      <div className={`max-w-[85%] p-4 rounded-2xl font-medium text-sm shadow-sm ${line.speaker === 'AI Agent' ? 'bg-[#003A87] text-white rounded-tl-none' : 'bg-white dark:bg-[#FF6B35] dark:text-white text-[#003A87] border border-gray-100 dark:border-transparent rounded-tr-none'}`}>
                         {line.text}
                       </div>
                     </div>
@@ -274,11 +290,10 @@ export const LiveDemo: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Action Tags */}
           <div className="mt-12 flex flex-wrap gap-3 justify-center">
-            {['Emergency Triage', 'Mississauga Scheduling', 'AC Quote Flow', 'French/Multilingual'].map(tag => (
+            {['Ask about 2026 Rebates', 'Say "I smell gas"', 'Furnace Banging Noise', 'Mississauga Service Call'].map(tag => (
               <span key={tag} className="px-5 py-2 bg-[#003A87]/5 dark:bg-white/5 border border-[#003A87]/10 dark:border-white/10 rounded-xl text-[9px] font-black text-[#003A87] dark:text-[#FF6B35] uppercase tracking-widest">
-                {tag}
+                Try: {tag}
               </span>
             ))}
           </div>
